@@ -10,11 +10,11 @@
 
 app:
   title:
-    ja: ○○ 管理コンソール
-    en: ○○ Admin Console
+    ja: サンプル組織 管理コンソール
+    en: Example Org Admin Console
   description:
-    ja: ○○ のデータ更新・デプロイ操作を行うための管理画面
-    en: Operator panel for updating and deploying ○○
+    ja: サンプル組織のデータ更新・デプロイ操作を行うための管理画面
+    en: Operator panel for updating and deploying Example Org sites
   # 配信先 URL (OGP / metadataBase 用)。環境変数 NEXT_PUBLIC_SITE_URL があればそちらが優先。
   url: https://example.pages.dev
   # 「使い方」ページに載せる画面。public/images/how-to-use/ に置いたファイル名を
@@ -30,8 +30,8 @@ app:
       ja: 各サイトのカードを開いて、デプロイやデータ更新などの操作を実行できます。
       en: Open a site card to run deploys, data updates, and other operations.
   footer:
-    ja: © ○○
-    en: © ○○
+    ja: © サンプル組織
+    en: © Example Org
 
 # 管理対象サイトの一覧。1サイトに複数のアクションを持たせられます。
 #
