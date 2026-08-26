@@ -1,0 +1,91 @@
+# =====================================================
+# Admin Console 設定ファイル (雛形)
+# =====================================================
+# このファイルを config.yml にコピーして編集してください。
+# 編集したら `npm run config:generate` (dev / build の前に自動実行されます)。
+#
+# ここに書いた内容から、画面の文言・サイト一覧・メタデータがすべて生成されます。
+# コード側に組織名やリポジトリ名を書き足す必要はありません。
+# 言語ごとの値は ja / en の2つを書いてください。
+
+app:
+  title:
+    ja: ○○ 管理コンソール
+    en: ○○ Admin Console
+  description:
+    ja: ○○ のデータ更新・デプロイ操作を行うための管理画面
+    en: Operator panel for updating and deploying ○○
+  # 配信先 URL (OGP / metadataBase 用)。環境変数 NEXT_PUBLIC_SITE_URL があればそちらが優先。
+  url: https://example.pages.dev
+  # 「使い方」ページに載せる画面。public/images/how-to-use/ に置いたファイル名を
+  # 手順順に並べる。省略すると画像なしで手順だけを表示する。
+  # howToUseImages:
+  #   - 01-signin.png
+  #   - 02-home.png
+  homePage:
+    heading:
+      ja: 管理コンソール
+      en: Admin Console
+    lead:
+      ja: 各サイトのカードを開いて、デプロイやデータ更新などの操作を実行できます。
+      en: Open a site card to run deploys, data updates, and other operations.
+  footer:
+    ja: © ○○
+    en: © ○○
+
+# 管理対象サイトの一覧。1サイトに複数のアクションを持たせられます。
+#
+# repo は "owner/repo" の完全名で書きます。
+# **すべて同じ GitHub 組織である必要があります** (1デプロイ = 1 installation)。
+# 別組織を操作したい場合は、この管理コンソールをもう1つ立ててください。
+sites:
+  - id: example-site
+    name:
+      ja: サンプルサイト
+      en: Example Site
+    description:
+      ja: このカードの説明。作業者が読んで何をする画面か分かる文にします。
+      en: What this card does, written for the operator.
+    url: https://example.org/
+    actions:
+      # (1) 入力の無いアクション
+      - id: deploy
+        label:
+          ja: デプロイを実行
+          en: Deploy
+        description:
+          ja: 最新のデータを取得し、ビルドして配信します（数分かかります）。
+          en: Fetches the latest data, builds, and deploys (takes a few minutes).
+        type: github-workflow
+        repo: your-org/your-repo
+        workflow: prod.yml
+        ref: main
+
+      # (2) 作業者に入力してもらうアクション
+      - id: reindex
+        label:
+          ja: 検索インデックスを更新
+          en: Rebuild search index
+        description:
+          ja: 対象を指定して検索インデックスを作り直します。
+          en: Rebuilds the search index for the given target.
+        type: github-workflow
+        repo: your-org/your-repo
+        workflow: reindex.yml
+        ref: main
+        inputs:
+          - name: target
+            type: string
+            default: all
+            label:
+              ja: 対象 (all または ID)
+              en: Target (all or ID)
+          - name: dry_run
+            type: boolean
+            default: false
+            label:
+              ja: 確認のみ（実際には更新しない）
+              en: Dry run (do not write)
+        # 作業者に見せずに固定で渡す値
+        fixedInputs:
+          triggered_by: admin-console

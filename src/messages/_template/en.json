@@ -1,0 +1,69 @@
+{
+  "Common": {
+    "title": "",
+    "description": "",
+    "home": "Home"
+  },
+  "HomePage": {
+    "heading": "",
+    "lead": "",
+    "viewSite": "Open site",
+    "viewDetails": "Open details",
+    "lastRun": "Last run",
+    "noRecentRun": "No history",
+    "running": "Running…",
+    "success": "Success",
+    "failure": "Failed",
+    "neverRan": "Never run"
+  },
+  "Detail": {
+    "actionsHeading": "Actions",
+    "runsHeading": "Run history",
+    "refresh": "Refresh",
+    "loadingJobs": "Loading jobs...",
+    "loadingLogs": "Loading log...",
+    "selectRun": "Select a run from the left",
+    "noRunsYet": "This action hasn't been run yet."
+  },
+  "Trigger": {
+    "confirmTitle": "Run this action?",
+    "confirm": "Run",
+    "cancel": "Cancel",
+    "triggered": "Started. The job is running on GitHub Actions.",
+    "error": "Failed to start",
+    "viewLogs": "View logs"
+  },
+  "Header": {
+    "en": "English",
+    "ja": "日本語",
+    "howToUse": "How to use"
+  },
+  "HowToUse": {
+    "title": "How to use",
+    "lead": "This admin console lets you trigger deploys, index updates and other operations from the browser. No GitHub account is required.",
+    "step1Title": "1. Sign in",
+    "step1Body": "When you open the console URL, the Cloudflare Access sign-in page appears. Enter your authorized email address and you'll receive a one-time PIN. Enter the PIN to complete sign-in.",
+    "step1Caption": "Cloudflare Access sign-in",
+    "step2Title": "2. Pick a site",
+    "step2Body": "After sign-in, you'll see the list of sites. Click any card to open that site's detail page. Each card shows badges for the actions available on that site.",
+    "step2Caption": "Site list (home)",
+    "step3Title": "3. Select an action and run it",
+    "step3Body": "On the detail page, the tabs at the top let you switch between actions. The center panel shows the action description, optional inputs, and the run button. Click the run button and confirm to start the job on GitHub Actions.",
+    "step3Caption": "Detail page: select and run an action",
+    "step4Title": "4. Watch progress and logs",
+    "step4Body": "Once started, the run appears in the history on the left. Select a running entry to see live job logs on the right. The view auto-refreshes every 5 seconds until the job completes (green check for success, red X for failure).",
+    "step4Caption": "Live log view",
+    "step5Title": "5. Past run history",
+    "step5Body": "The left list shows the last 20 runs. Click any past run to inspect its jobs and logs after the fact.",
+    "troubleHeading": "Troubleshooting",
+    "trouble1Title": "Can't sign in",
+    "trouble1Body": "If you see 'Access denied' on the sign-in page, your email address may not be in the allow list. Contact your administrator.",
+    "trouble2Title": "Nothing happens when I click run",
+    "trouble2Body": "Could be a network issue or expired session. Reload the page and try again. If the problem persists, contact your administrator.",
+    "trouble3Title": "The run failed",
+    "trouble3Body": "Check the log on the right. Configuration errors ('permission denied', 'ES_URL is not set' etc.) should be reported to your administrator. Data errors (missing required fields, broken references) can be fixed at the data source and re-run."
+  },
+  "Footer": {
+    "copyright": ""
+  }
+}
