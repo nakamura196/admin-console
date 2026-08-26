@@ -153,6 +153,11 @@ npm run config:generate
 
 対象リポジトリの `.github/workflows/<workflow-file>.yml` を作成：
 
+> **workflow ファイルはデフォルトブランチに置くこと。**
+> `workflow_dispatch` は、対象の workflow がデフォルトブランチに存在しないと起動できません
+> (`config.yml` の `ref` で別ブランチを指定して実行することはできますが、ファイル自体は
+> デフォルトブランチにマージされている必要があります)。
+
 ```yaml
 name: Admin trigger
 
