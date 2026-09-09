@@ -19,6 +19,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # config.yml はデプロイごとの設定なのでリポジトリに入っていない。
+      # 無いと config:generate が落ちて、この後の監査まで届かない。
+      # (実際 2026-08-26 以降、CI はここで落ち続けていた)
+      - name: config.yml が無ければ example から作る
+        run: test -f config.yml || cp config.example.yml config.yml
       - run: npm run config:generate
       - run: npx tsc --noEmit
       - run: npm run lint
