@@ -11,12 +11,22 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      # Actions は可変タグではなく commit SHA で固定する。タグはメンテナが
+      # 乗っ取られた瞬間に中身が差し替わる (tj-actions/changed-files 2025-03)。
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
       - run: npm ci
+      # config.yml はデプロイごとの設定なのでリポジトリに入っていない。
+      # 無いと config:generate が落ちて、この後の監査まで届かない。
+      # (実際 2026-08-26 以降、CI はここで落ち続けていた)
+      - name: config.yml が無ければ example から作る
+        run: test -f config.yml || cp config.example.yml config.yml
       - run: npm run config:generate
       - run: npx tsc --noEmit
       - run: npm run lint
+      # 依存の脆弱性 (high 以上) で落とす。除外中の既知案件は
+      # scripts/audit.mjs に理由と期限つきで書いてある。
+      - run: node scripts/audit.mjs
