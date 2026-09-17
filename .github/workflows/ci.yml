@@ -29,4 +29,9 @@ jobs:
       - run: npm run lint
       # 依存の脆弱性 (high 以上) で落とす。除外中の既知案件は
       # scripts/audit.mjs に理由と期限つきで書いてある。
-      - run: node scripts/audit.mjs
+      - name: Audit
+        run: node scripts/audit.mjs
+        # Dependabot の PR では失敗させない。一部の脆弱性だけを直す更新でも、
+        # 残りの脆弱性で落ちて取り込めなくなるため。取り込むかどうかは
+        # dependabot-security-merge.yml が更新前後の件数で判定する。
+        continue-on-error: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
