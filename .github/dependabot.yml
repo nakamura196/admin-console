@@ -25,6 +25,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      # 脆弱性を直す更新は 1 本の PR にまとめる。まとめないと、勧告が出るたびに
+      # 依存ごとに PR が十数本立ち、そのたびに CI と自動マージが走って Actions の枠を食う
+      # (2026-09 に org の無料枠 2,000 分を超えた)。
+      security:
+        applies-to: security-updates
+        patterns:
+          - "*"
     # サプライチェーン攻撃対策: 公開直後のバージョンは取らない。
     # 過去事例 (chalk/debug worm 2025-09, eslint-config-prettier 2025-07,
     # ua-parser-js 2021) は数時間〜数日で検出・yank されている。
@@ -34,13 +41,22 @@ updates:
       semver-major-days: 30
       semver-minor-days: 7
       semver-patch-days: 3
+    # メジャー更新は提案させない (破壊的変更の確認が要るので個別に見る)。
+    # 脆弱性を直す更新は、ここで除外していても届く。
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      # 脆弱性を直す更新は 1 本の PR にまとめる (npm と同じ理由)
+      security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+    # github-actions では semver-*-days が使えない (Dependabot が設定ファイルを不正扱いにする)。
     cooldown:
       default-days: 5
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
