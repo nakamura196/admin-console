@@ -13,6 +13,7 @@
 
 import { createAppAuth } from '@octokit/auth-app'
 import { request } from '@octokit/request'
+import { runMatchesWorkflow } from './validate'
 
 export type LastRun = {
   runId?: number
@@ -317,6 +318,38 @@ export async function listJobs(repo: string, runId: number): Promise<JobSummary[
       steps: j.steps,
     }
   })
+}
+
+/**
+ * run が指定のワークフローのものか確かめる。
+ * URL の runId をそのまま信じると、同じリポジトリの別ワークフロー
+ * (コンソールに出していないもの) の実行も読めてしまう。
+ */
+export async function runBelongsToWorkflow(
+  repo: string,
+  runId: number,
+  workflowFile: string
+): Promise<boolean> {
+  const url = `${API}/repos/${repo}/actions/runs/${runId}`
+  const headers = await authHeaders()
+  const res = await fetch(url, { headers, cache: 'no-store' })
+  if (!res.ok) return false
+  const run = (await res.json()) as { path?: string | null; workflow_id?: number | null }
+  return runMatchesWorkflow(run, workflowFile)
+}
+
+/** job が指定の run のものか確かめる。 */
+export async function jobBelongsToRun(
+  repo: string,
+  jobId: number,
+  runId: number
+): Promise<boolean> {
+  const url = `${API}/repos/${repo}/actions/jobs/${jobId}`
+  const headers = await authHeaders()
+  const res = await fetch(url, { headers, cache: 'no-store' })
+  if (!res.ok) return false
+  const job = (await res.json()) as { run_id?: number }
+  return job.run_id === runId
 }
 
 /**

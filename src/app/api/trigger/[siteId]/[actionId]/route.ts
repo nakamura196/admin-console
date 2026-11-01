@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAction } from '@/lib/sites.generated'
 import { dispatchWorkflow, fetchRunAfterDispatch } from '@/lib/github'
+import { sanitizeInputs } from '@/lib/validate'
 
 export const runtime = 'nodejs'
 
@@ -17,13 +18,12 @@ export async function POST(
     )
   }
 
-  let body: { inputs?: Record<string, string | boolean> } = {}
+  let body: { inputs?: unknown } = {}
   try {
     body = await req.json()
   } catch {
     body = {}
   }
-  const inputs = body.inputs ?? {}
 
   try {
     if (action.type === 'vercel-deploy-hook') {
@@ -45,7 +45,12 @@ export async function POST(
     }
 
     if (action.type === 'github-workflow') {
-      const merged = { ...inputs, ...(action.fixedInputs ?? {}) }
+      // config.yml で宣言した入力だけを通す。宣言外の名前や型違いは拒否する。
+      const checked = sanitizeInputs(action, body?.inputs)
+      if (!checked.ok) {
+        return NextResponse.json({ error: checked.error }, { status: 400 })
+      }
+      const merged = { ...checked.inputs, ...(action.fixedInputs ?? {}) }
       await dispatchWorkflow(action.repo, action.workflow, action.ref, merged)
       const { htmlUrl, runId } = await fetchRunAfterDispatch(action.repo, action.workflow)
       return NextResponse.json({ ok: true, htmlUrl, runId })
