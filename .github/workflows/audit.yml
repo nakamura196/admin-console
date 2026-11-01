@@ -1,0 +1,26 @@
+name: Weekly audit
+
+# 依存の脆弱性 (high 以上) を週 1 回確かめる。PR が無い週でも、新しく公開された
+# 勧告に気づけるようにするため。判定は CI と同じ scripts/audit.mjs を使う
+# (除外中の既知案件と、その期限はそちらに書いてある)。
+# npm audit は package-lock.json だけで判定できるので、npm ci はしない (Actions の分数を抑える)。
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # 毎週月曜 09:00 (JST)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Audit
+        run: node scripts/audit.mjs
