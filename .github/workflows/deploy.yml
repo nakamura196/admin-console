@@ -11,6 +11,9 @@ concurrency:
 
 jobs:
   deploy:
+    # テンプレート本体には config.yml も Cloudflare の Secrets も無いので配備しない。
+    # テンプレートから複製したリポジトリでは is_template が false になり、そのまま動く。
+    if: ${{ !github.event.repository.is_template }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
